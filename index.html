@@ -135,7 +135,8 @@
 
         async function sendMessage() {
           if (inputText !== "" && isLoading == false) {
-            if (inputText.toLowerCase() == "hi") {
+            const greetingRegex = /^(h+i+|hey|hello|hyy+)$/i;
+            if (greetingRegex.test(inputText.trim())) {
               const newChatMessages = [
                 ...chatMessages,
                 {
@@ -156,7 +157,7 @@
                 },
               ]);
               setIsLoading(true);
-              await new Promise(resolve => setTimeout(resolve, 1000));
+              await new Promise((resolve) => setTimeout(resolve, 1000));
               setChatMessage([
                 ...newChatMessages,
                 {
