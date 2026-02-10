@@ -34,37 +34,44 @@
       .chat-input-container {
         position: fixed;
         bottom: 0;
+        left: 0;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #ddd;
+        max-width: 600px;
         left: 50%;
         transform: translateX(-50%);
-        width: 100%;
-        max-width: 600px;
-        background-color: white;
-        padding: 15px;
-        display: flex;
-        gap: 10px;
-        border-top: 1px solid #ddd;
         z-index: 1000;
       }
-
       .chat-input {
         flex-grow: 1;
-        padding: 12px 15px;
-        border-radius: 25px;
+        min-width: 0;
+        padding: 12px;
+        border-radius: 20px;
         border: 1px solid #ccc;
         font-size: 16px;
-        outline: none;
       }
 
       .send-button {
+        flex-shrink: 0;
+        white-space: nowrap;
         background-color: rgb(25, 135, 84);
         color: white;
-        padding: 0px 20px;
+        padding: 10px 20px;
         border: none;
-        border-radius: 25px;
+        border-radius: 20px;
         font-size: 15px;
         font-weight: bold;
         cursor: pointer;
-        transition: opacity 0.2s;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .chat-message-user {
