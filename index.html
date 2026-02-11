@@ -104,9 +104,21 @@
         height: 35px;
         flex-shrink: 0;
       }
-      
+
       .loading-spinner {
         height: 40px;
+      }
+
+      .empty-chat-messages-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: gray;
+      }
+      .welcome-message {
+        font-size: clamp(12px, 4vw, 28px);
+        text-align: center;
+        width: 100%;
       }
     </style>
   </head>
@@ -155,7 +167,13 @@
               setChatMessage([
                 ...newChatMessages,
                 {
-                  message: <img src="images/loading-spinner.gif" alt="loading-spinner" className="loading-spinner" />,
+                  message: (
+                    <img
+                      src="images/loading-spinner.gif"
+                      alt="loading-spinner"
+                      className="loading-spinner"
+                    />
+                  ),
                   sender: "robot",
                   id: crypto.randomUUID(),
                 },
@@ -187,7 +205,13 @@
               setChatMessage([
                 ...newChatMessages,
                 {
-                  message: <img src="images/loading-spinner.gif" alt="loading-spinner" className="loading-spinner" />,
+                  message: (
+                    <img
+                      src="images/loading-spinner.gif"
+                      alt="loading-spinner"
+                      className="loading-spinner"
+                    />
+                  ),
                   sender: "robot",
                   id: crypto.randomUUID(),
                 },
@@ -275,44 +299,37 @@
           }
         }, [chatMessages]);
 
-        return (
-          <div className="chat-messages-container" ref={chatMessagesRef}>
-            {chatMessages.map((chatMessage) => {
-              return (
-                <ChatMessage
-                  message={chatMessage.message}
-                  sender={chatMessage.sender}
-                  key={chatMessage.id}
-                />
-              );
-            })}
-          </div>
-        );
+        if (chatMessages.length == 0) {
+          return (
+            <div
+              className="chat-messages-container empty-chat-messages-container"
+              ref={chatMessagesRef}
+            >
+              <p className="welcome-message">
+                Welcome to my ChatBot Project! Send a message using textbox
+                below.
+              </p>
+            </div>
+          );
+        } else {
+          return (
+            <div className="chat-messages-container" ref={chatMessagesRef}>
+              {chatMessages.map((chatMessage) => {
+                return (
+                  <ChatMessage
+                    message={chatMessage.message}
+                    sender={chatMessage.sender}
+                    key={chatMessage.id}
+                  />
+                );
+              })}
+            </div>
+          );
+        }
       }
 
       function App() {
-        const [chatMessages, setChatMessage] = React.useState([
-          {
-            message: "hello chatbot",
-            sender: "user",
-            id: "id1",
-          },
-          {
-            message: "Hello! How can I help you?",
-            sender: "robot",
-            id: "id2",
-          },
-          {
-            message: "can your get me todays date?",
-            sender: "user",
-            id: "id3",
-          },
-          {
-            message: "Today is Feburary 9",
-            sender: "robot",
-            id: "id4",
-          },
-        ]);
+        const [chatMessages, setChatMessage] = React.useState([]);
         // const [chatMessages, setChatMessage] = array;
         // const chatMessages = array[0];
         // const setChatMessage = array[1];
