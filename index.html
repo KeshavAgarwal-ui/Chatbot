@@ -104,6 +104,10 @@
         height: 35px;
         flex-shrink: 0;
       }
+      
+      .loading-spinner {
+        height: 40px;
+      }
     </style>
   </head>
   <body>
@@ -151,7 +155,7 @@
               setChatMessage([
                 ...newChatMessages,
                 {
-                  message: "Loading...",
+                  message: <img src="images/loading-spinner.gif" alt="loading-spinner" className="loading-spinner" />,
                   sender: "robot",
                   id: crypto.randomUUID(),
                 },
@@ -183,7 +187,7 @@
               setChatMessage([
                 ...newChatMessages,
                 {
-                  message: "Loading...",
+                  message: <img src="images/loading-spinner.gif" alt="loading-spinner" className="loading-spinner" />,
                   sender: "robot",
                   id: crypto.randomUUID(),
                 },
