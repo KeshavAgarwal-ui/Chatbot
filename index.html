@@ -186,6 +186,7 @@
                 {
                   message: inputText,
                   sender: "user",
+                  timestamp: dayjs().valueOf(),
                   id: crypto.randomUUID(),
                 },
               ];
@@ -213,6 +214,7 @@
                 {
                   message: "Hello! How can I help you?",
                   sender: "robot",
+                  timestamp: dayjs().valueOf(),
                   id: crypto.randomUUID(),
                 },
               ]);
@@ -223,6 +225,7 @@
                 {
                   message: inputText,
                   sender: "user",
+                  timestamp: dayjs().valueOf(),
                   id: crypto.randomUUID(),
                 },
               ];
@@ -251,6 +254,7 @@
                 {
                   message: response,
                   sender: "robot",
+                  timestamp: dayjs().valueOf(),
                   id: crypto.randomUUID(),
                 },
               ]);
@@ -279,8 +283,7 @@
         );
       }
 
-      function ChatMessage({ message, sender }) {
-        const [time] = React.useState(dayjs().valueOf());
+      function ChatMessage({ message, sender, timestamp }) {
         // const message = props.message;
         // const sender = props.sender;
         // const { message, sender } = props;
@@ -309,7 +312,12 @@
                 className="chat-message-profile"
               />
             )}
-            <div className="chat-message-text">{message}<span className='chat-time'>{dayjs(time).format('h:mma')}</span></div>
+            <div className="chat-message-text">
+              {message}
+              <span className="chat-time">
+                {dayjs(timestamp).format("h:mma")}
+              </span>
+            </div>
             {sender === "user" && (
               <img
                 src="images/user.png"
@@ -356,6 +364,7 @@
                   <ChatMessage
                     message={chatMessage.message}
                     sender={chatMessage.sender}
+                    timestamp={chatMessage.timestamp}
                     key={chatMessage.id}
                   />
                 );
