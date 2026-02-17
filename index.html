@@ -139,6 +139,10 @@
         function saveInputText(event) {
           setInputText(event.target.value);
         }
+        function clearMessages() {
+          setChatMessage([]);
+          localStorage.setItem("messages", JSON.stringify([]));
+        }
 
         function enterKeyCheck(event) {
           if (event.key == "Enter") {
@@ -244,6 +248,9 @@
             <button onClick={sendMessage} className="send-button">
               Send
             </button>
+            <button onClick={clearMessages} className="clear-button">
+              Clear
+            </button>
           </div>
         );
       }
@@ -289,7 +296,7 @@
         );
       }
 
-      function useAutoScroll(dependencies){
+      function useAutoScroll(dependencies) {
         const chatMessagesRef = React.useRef(null);
 
         React.useEffect(() => {
@@ -334,10 +341,13 @@
       }
 
       function App() {
-        const [chatMessages, setChatMessage] = React.useState([]);
-        // const [chatMessages, setChatMessage] = array;
-        // const chatMessages = array[0];
-        // const setChatMessage = array[1];
+        const [chatMessages, setChatMessage] = React.useState(() => {
+          const savedMessages = localStorage.getItem("messages");
+          return savedMessages ? JSON.parse(savedMessages) : [];
+        });
+        React.useEffect(() => {
+          localStorage.setItem("messages", JSON.stringify(chatMessages));
+        }, [chatMessages]);
         return (
           <div className="app-container">
             <ChatMessages chatMessages={chatMessages} />
