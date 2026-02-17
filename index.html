@@ -137,6 +137,12 @@
         text-align: center;
         width: 100%;
       }
+      .chat-time {
+        display: block;
+        font-size: 12px;
+        color: gray;
+        margin-top: 3px;
+      }
     </style>
   </head>
   <body>
@@ -146,6 +152,7 @@
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
 
     <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
@@ -273,6 +280,7 @@
       }
 
       function ChatMessage({ message, sender }) {
+        const [time] = React.useState(dayjs().valueOf());
         // const message = props.message;
         // const sender = props.sender;
         // const { message, sender } = props;
@@ -301,7 +309,7 @@
                 className="chat-message-profile"
               />
             )}
-            <div className="chat-message-text">{message}</div>
+            <div className="chat-message-text">{message}<span className='chat-time'>{dayjs(time).format('h:mma')}</span></div>
             {sender === "user" && (
               <img
                 src="images/user.png"
