@@ -206,7 +206,7 @@
 
           try {
             const API_KEY = "AIzaSyC0AduTN9y51En0fiaaA7RkZ-dPT0PFWq0"; // Ensure this is a fresh key from AI Studio
-            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`;
 
             // 1. Create a controller to cancel the request if it takes too long
             const controller = new AbortController();
