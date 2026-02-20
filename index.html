@@ -178,54 +178,14 @@
         }
 
         async function sendMessage() {
-          if (inputText !== "" && isLoading == false) {
-            const greetingRegex = /^(h+i+|hey|hello|hyy+)$/i;
-            if (greetingRegex.test(inputText.trim())) {
-              const newChatMessages = [
-                ...chatMessages,
-                {
-                  message: inputText,
-                  sender: "user",
-                  id: crypto.randomUUID(),
-                },
-              ];
+          if (inputText.trim() === "" || isLoading) return;
 
-              setChatMessage(newChatMessages);
-              setInputText("");
-              setChatMessage([
-                ...newChatMessages,
-                {
-                  message: (
-                    <img
-                      src="images/loading-spinner.gif"
-                      alt="loading-spinner"
-                      className="loading-spinner"
-                    />
-                  ),
-                  sender: "robot",
-                  id: crypto.randomUUID(),
-                },
-              ]);
-              setIsLoading(true);
-              await new Promise((resolve) => setTimeout(resolve, 1000));
-              setChatMessage([
-                ...newChatMessages,
-                {
-                  message: "Hello! How can I help you?",
-                  sender: "robot",
-                  id: crypto.randomUUID(),
-                },
-              ]);
-              setIsLoading(false);
-            } else {
-              const newChatMessages = [
-                ...chatMessages,
-                {
-                  message: inputText,
-                  sender: "user",
-                  id: crypto.randomUUID(),
-                },
-              ];
+          const userMessage = {
+            message: inputText,
+            sender: "user",
+            timestamp: dayjs().valueOf(),
+            id: crypto.randomUUID(),
+          };
 
           const loadingMessage = {
             message: (
@@ -239,31 +199,37 @@
             id: "loading-id",
           };
 
-              setChatMessage([
-                ...newChatMessages,
-                {
-                  message: (
-                    <img
-                      src="images/loading-spinner.gif"
-                      alt="loading-spinner"
-                      className="loading-spinner"
-                    />
-                  ),
-                  sender: "robot",
-                  id: crypto.randomUUID(),
-                },
-              ]);
-              setIsLoading(true);
-              const response = await Chatbot.getResponseAsync(inputText);
-              setChatMessage([
-                ...newChatMessages,
-                {
-                  message: response,
-                  sender: "robot",
-                  id: crypto.randomUUID(),
-                },
-              ]);
-              setIsLoading(false);
+          const newChatMessages = [...chatMessages, userMessage];
+          setChatMessage([...newChatMessages, loadingMessage]);
+          setInputText("");
+          setIsLoading(true);
+
+          try {
+            const API_KEY = "AIzaSyCJZjgne1uAA9d26iaihz29NkUw_Wre8_I"; // Ensure this is a fresh key from AI Studio
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+
+            // 1. Create a controller to cancel the request if it takes too long
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // Increase timeout to 30 seconds for university networks
+              signal: AbortSignal.timeout(30000),
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: inputText }] }],
+              }),
+            });
+
+            clearTimeout(timeoutId);
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.error?.message || "Internal Server Error");
             }
 
             // 2. Safe check for response path
@@ -280,7 +246,25 @@
                 id: crypto.randomUUID(),
               },
             ]);
-            }
+          } catch (error) {
+            console.error("Fetch Error:", error);
+            let errorMessage = "Connection lost, Master.";
+
+            if (error.name === "AbortError")
+              errorMessage = "Request timed out.";
+
+            setChatMessage([
+              ...newChatMessages,
+              {
+                message: errorMessage,
+                sender: "robot",
+                timestamp: dayjs().valueOf(),
+                id: crypto.randomUUID(),
+              },
+            ]);
+          } finally {
+            setIsLoading(false); // This ensures the spinner ALWAYS goes away
+          }
         }
         return (
           <div className="chat-input-container">
